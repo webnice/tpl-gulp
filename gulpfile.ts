@@ -15,16 +15,22 @@ import {
 } from './gulp';
 
 
-// Задача конвертации шрифтов и создания CSS с подключением шрифтов.
+/**
+ * Задача конвертации шрифтов и создания CSS с подключением шрифтов.
+ */
 const fonts: TaskFunction = gulp.series(otfToTtf, ttfToWoff, ttfToWoff2, fontToCss);
 
-// Основные задачи.
+/**
+ * Основные задачи.
+ */
 const mainTask: TaskFunction = gulp.series(
     fonts,
     gulp.parallel(assets, img, html, scss, gulp.series(typescript, js), spriteSvg)
 );
 
-// Задачи наблюдателя.
+/**
+ * Задачи наблюдателя за изменением файлов.
+ */
 const watcher: TaskFunction = (): void => {
     gulp.watch(path.watch.assets, assets);
     gulp.watch(path.watch.img, img);
@@ -35,7 +41,9 @@ const watcher: TaskFunction = (): void => {
     gulp.watch(path.watch.svgIcon, spriteSvg);
 };
 
-// Задачи режима разработки.
+/**
+ * Задачи режима разработки.
+ */
 const development: TaskFunction = gulp.series(
     (cb: TaskCallback): void => {
         console.log(colors.green('*** Запущена задача сборки в режиме разработки.'));
@@ -46,7 +54,9 @@ const development: TaskFunction = gulp.series(
     gulp.parallel(watcher, server),
 );
 
-// Задачи сборки в режиме "продакшн".
+/**
+ * Задачи сборки в режиме "продакшн".
+ */
 export const production: TaskFunction = gulp.series(
     (cb: TaskCallback): void => {
         console.log(colors.green('*** Запущена задача сборки в режиме "продакшн".'));
@@ -56,20 +66,32 @@ export const production: TaskFunction = gulp.series(
     mainTask,
 );
 
-// Задачи сборки дистрибутива в режиме продакшн.
+/**
+ * Задачи сборки дистрибутива в отдельную директорию, в режиме продакшн.
+ */
 const distributive: TaskFunction = gulp.series(cleaner, production, dist);
 
-// Задача конвертации шрифтов и формирования файла fonts.scss.
+/**
+ * Задача конвертации шрифтов и формирования файла fonts.scss.
+ */
 gulp.task('fonts', fonts);
 
-// Только создание спрайта из SVG картинок.
+/**
+ * Задача создания спрайта SVG из SVG картинок.
+ */
 gulp.task('sprite', gulp.series(cleaner, spriteSvg));
 
-// Архивация сборки в zip архив.
+/**
+ * Архивация результатов сборки в zip архив.
+ */
 gulp.task('zip', gulp.series(cleaner, production, zip));
 
-// Архивация сборки в zip архив.
+/**
+ * Задача сборки дистрибутива в отдельную директорию, в режиме продакшн.
+ */
 gulp.task('dist', distributive);
 
-// Задача по умолчанию.
+/**
+ * Задача по умолчанию.
+ */
 gulp.task('default', development);

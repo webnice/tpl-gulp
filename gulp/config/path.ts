@@ -1,8 +1,10 @@
+// @ts-ignore
 import * as nodePath from 'path';
 
 import { Path } from "../../@types/path";
 
 
+// @ts-ignore
 const dirRoot: string = nodePath.resolve(process.cwd());
 const dirBuild: string = `${dirRoot}/build`;
 const dirSource: string = `${dirRoot}/src`;

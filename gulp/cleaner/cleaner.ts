@@ -4,27 +4,37 @@ import { TransformCallback, obj as through2Obj } from "through2";
 import { rmSync, rmdirSync, Stats, statSync, readdirSync } from "fs";
 
 
-// Функция управляемого логирования.
+/**
+ * Функция управляемого логирования.
+ * @param options - Объект настроек.
+ * @param data    - Логируемые данные.
+ */
 const log = (options: CleanOption, ...data: any[]): void => {
     if (options.verbose) {
         console.log(...data);
     }
 }
 
-// Интерфейс настроек.
+/**
+ * Интерфейс настроек.
+ */
 export interface CleanOption {
     verbose: boolean;
 }
 
-// Функция очистки.
+/**
+ * Функция очистки директории, gulp плагин.
+ * @param options - Настройки очистки.
+ */
 export const clean = (options?: CleanOption): NodeJS.ReadWriteStream => {
-    let rmEmptyDir: (dirName: string) => void;
-    let parentDir: string = '';
-    let ret: vinyl.StreamFile[] = [];
+    let rmEmptyDir: (dirName: string) => void; // Функция удаления пустой директории.
+    let parentDir: string = ''; // Путь к вышестоящей директории.
+    let ret: vinyl.StreamFile[] = []; // Бъект файла.
 
+    // Если настройки не переданы, создаётся объект пустых настроек.
     !options ? options = {verbose: false} : options;
     // Удаление пустой директории.
-    // Если удаление пустой директории создало пустую директорию, так же удаление и её, рекурсивно.
+    // Если удаление пустой директории создало пустую директорию, она так же удаляется и далее рекурсивно.
     rmEmptyDir = (dirName: string): void => {
         const list: string[] = readdirSync(dirName);
         if (dirName !== '' && dirName !== '.' && list.length == 0) {
@@ -41,14 +51,14 @@ export const clean = (options?: CleanOption): NodeJS.ReadWriteStream => {
 
     // Возврат функции очистки в обёртке для использования в gulp.
     return through2Obj((file: vinyl.StreamFile, _enc: BufferEncoding, cb: TransformCallback): vinyl.StreamFile[] => {
-        let filepath: string = file.path;
-        let cwd: string = file.cwd;
-        let relative: string = path.relative(cwd, filepath);
-        let stat: Stats = statSync(relative);
+        let filepath: string = file.path; // Путь к файлу или директории.
+        let cwd: string = file.cwd; // Текущая рабочая директория.
+        let relative: string = path.relative(cwd, filepath); // Относительный путь к директории или файлу.
+        let stat: Stats = statSync(relative); // Запрос информации о файле или директории из файловой системы.
 
-        // Директорию удаляем только если она пустая.
+        // Получена директория.
         if (stat.isDirectory()) {
-            // Проверка, если директория пустая, удалить так же и директорию.
+            // Директория удаляется только если она пустая.
             rmEmptyDir(relative);
             // Завершение.
             ret.push(file);
@@ -56,13 +66,15 @@ export const clean = (options?: CleanOption): NodeJS.ReadWriteStream => {
             return ret;
         }
         try {
+            // Удаление файла с защитой от исключения.
             rmSync(filepath);
+            // Завершение.
             ret.push(file);
             log(options!, `${relative} - файл, удалён.`);
         } catch (e: unknown) {
             log(options!, `удаление файла ${filepath} прервано ошибкой: ${e}`);
         }
-        // Проверка, если директория пустая, удалить так же и директорию.
+        // Директория удаляется только если она пустая.
         rmEmptyDir(path.dirname(relative));
         // Завершение.
         cb();
