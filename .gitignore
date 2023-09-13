@@ -1,0 +1,53 @@
+## Результаты сборки.
+/dist
+/tmp
+/.tmp
+/out-tsc
+/bazel-out
+/build
+
+## NodeJS
+/node_modules
+/ts-node
+npm-debug.log
+yarn-error.log
+
+## Конфигурационнае файла IDE редакторов.
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.iml
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Разнообразные пути.
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# Системные файлы.
+.DS_Store
+Thumbs.db
+
+# Персональная кастомизация.
+nohup.out
+/proxy.conf.json
+/proxy.conf.*.json
+!/proxy.conf.example.json
+/src/environments/version.constant.ts
+/src/ts/version.constant.ts
+/gulp/version.json
