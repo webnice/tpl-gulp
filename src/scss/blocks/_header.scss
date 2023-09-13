@@ -1,0 +1,10 @@
+.header {
+	background-color: rgb(243, 209, 136);
+	padding: 20px 0;
+
+	&__row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+}

@@ -1,0 +1,22 @@
+/* Базовые настройки и сброс HTML. */
+@import "./base/reset";
+@import "./base/vars";
+@import "./base/base";
+@import "./base/utils";
+@import "./base/containers";
+@import "./base/sticky-footer";
+
+/* Шрифты. */
+@import "./fonts.scss";
+
+/* Блоки дизайна страницы */
+@import "./blocks/footer";
+@import "./blocks/header";
+@import "./blocks/logo";
+@import "./blocks/mobile-nav";
+@import "./blocks/nav-icon";
+
+/* tailwindcss */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

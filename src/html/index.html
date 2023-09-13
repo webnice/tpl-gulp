@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    @@include('component/head.html', {
+    "title": "Стартовый шаблон",
+    })
+    <link rel="stylesheet" href="/css/main.bundle.css" />
+</head>
+
+<body>
+@@include('blocks/header.html')
+
+<main>
+    <div class="w-full h-[calc(100vh/2-40px)] flex items-end justify-center">
+        <div class="flex flex-col">
+            <img src="@img/smile.png" width="120px">
+            <p style="font-family: 'Miama Nueva';" class="text-2xl">Это стартовый шаблон сборки.</p>
+            <div
+                id="current-time"
+                class="w-full text-right pt-[15px]"></div>
+        </div>
+    </div>
+</main>
+
+@@include('blocks/footer.html')
+
+<script src="/js/index.bundle.js"></script>
+</body>
+</html>
