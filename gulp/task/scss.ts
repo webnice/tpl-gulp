@@ -17,6 +17,7 @@ import { app } from "../app";
 const sassProcessor: any = gulpSass(dartSass);
 const sassProcessorOpt: any = {
     outputStyle: 'expanded',
+    silenceDeprecations: ['legacy-js-api'],
 };
 const webpcssOpt: any = {
     webpClass: ".webp", // Класс для браузеров поддерживающих webp.
