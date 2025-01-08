@@ -36,7 +36,7 @@
 		"@types/browser-sync": "^2.27.0",
 		"@types/browserify": "^12.0.37",
 		"@types/colors": "^1.2.1",
-		"@types/gulp": "^4.0.13",
+		"@types/gulp": "^4.0.17",
 		"@types/gulp-autoprefixer": "^0.0.37",
 		"@types/gulp-clean-css": "^4.3.1",
 		"@types/gulp-file-include": "^0.14.6",
