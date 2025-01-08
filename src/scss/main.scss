@@ -1,20 +1,20 @@
 /* Базовые настройки и сброс HTML. */
-@import "./base/reset";
-@import "./base/vars";
-@import "./base/base";
-@import "./base/utils";
-@import "./base/containers";
-@import "./base/sticky-footer";
+@use "base/reset";
+@use "base/vars";
+@use "base/base";
+@use "base/utils";
+@use "base/containers";
+@use "base/sticky-footer";
 
 /* Шрифты. */
-@import "./fonts.scss";
+@use "fonts.scss";
 
 /* Блоки дизайна страницы */
-@import "./blocks/footer";
-@import "./blocks/header";
-@import "./blocks/logo";
-@import "./blocks/mobile-nav";
-@import "./blocks/nav-icon";
+@use "blocks/footer";
+@use "blocks/header";
+@use "blocks/logo";
+@use "blocks/mobile-nav";
+@use "blocks/nav-icon";
 
 /* tailwindcss */
 @tailwind base;
