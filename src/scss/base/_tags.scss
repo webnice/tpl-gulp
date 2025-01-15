@@ -1,0 +1,12 @@
+h1 {
+  /** меньше SL. */
+  @apply max-sm:text-[20px] max-sm:font-bold;
+  /** SL. */
+  @apply sl:text-[24px] max-sm:font-bold;
+  /** SM. */
+  @apply sm:max-md:text-[24px] sm:max-md:font-bold;
+  /** MD-2XL. */
+  @apply md:text-[35px] md:font-bold;
+  /** 2XL и больше. */
+  @apply 2xl:text-[48px] md:font-bold;
+}

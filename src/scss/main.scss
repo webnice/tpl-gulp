@@ -1,25 +1,23 @@
-/* Базовые настройки и сброс HTML. */
+/** Базовые настройки. */
 @use "base/vars";
 @use "base/base";
 
-/* Шрифты. */
+/** Подключение tailwindcss. */
+@use "base/tailwindcss";
+
+/** Стили стандартных тегов HTML. */
+@use "base/tags";
+
+/** Шрифты. */
 @use "fonts.scss";
 
-/* Блоки дизайна страницы */
+/** Элементы HTML. */
+@use "ui/checkbox";
+
+/** Блоки и отдельные части страниц HTML. */
 @use "block/footer";
 @use "block/header";
 @use "block/logo";
 @use "block/mobile-nav";
 @use "block/nav-icon";
-
-/* tailwindcss */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
-main {
-  // 64px - высота заголовка.
-  // 79px - высота подвала.
-  @apply h-[calc(100vh-64px-79px)];
-}
+@use "block/main";
