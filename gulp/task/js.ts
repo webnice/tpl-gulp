@@ -1,4 +1,5 @@
 import * as webpack from "webpack-stream";
+import * as wp from "webpack";
 
 import { app } from "../app";
 
@@ -6,7 +7,7 @@ import { app } from "../app";
 /**
  * Константа текущего режима сборки проекта.
  */
-const mode: string = app.isProd ? 'production' : 'development';
+const mode: "production" | "development" | "none" | undefined = app.isProd ? 'production' : 'development';
 
 /**
  * Константа текущего режима создания карты исходников.
@@ -24,17 +25,18 @@ const target: string = app.isDev ? 'web' : 'browserslist';
  * в том числе на разных страницах.
  * Каждый дополнительный javascript файл необходимо прописывать в секции "entry".
  */
-const webpackOpt: any = {
+const webpackOpt: wp.Configuration = {
     mode: mode,
     devtool: devtool,
     target: target,
     entry: {
         index: './.tmp/js/index.js',
-        second: './.tmp/js/second.js',
     },
     output: {
         filename: '[name].bundle.js',
-        chunkFilename: "[name].chunk.js"
+        chunkFilename: "[name].chunk.js",
+        library: 'my',
+        libraryTarget: 'var',
     },
     resolve: {
         extensions: [".js"],
@@ -62,7 +64,7 @@ const webpackOpt: any = {
 /**
  * Обработка, преобразование, сжатие, конвертация javascript кода с использованием webpack.
  */
-export const js = () => {
+export const js: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     return app.gulp.src(`${app.path.tmp.js}/**/*.js`, {sourcemaps: app.isDev, allowEmpty: true})
         .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в JS')))
         // @ts-ignore

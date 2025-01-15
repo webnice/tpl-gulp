@@ -6,7 +6,7 @@ import { app } from "../app";
 /**
  * Создание ZIP архива с результатом сборки проекта.
  */
-export const zip = () => {
+export const zip: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     const archive: string = `build.zip`;
 
     return app.gulp.src(`${app.path.dirBuild}/**/*`, {})

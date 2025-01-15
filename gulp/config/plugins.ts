@@ -14,15 +14,16 @@ import * as gulpIf from 'gulp-if'; // Плагин обработки услов
  * Функция возвращает конфигурацию с разным заголовком.
  * @param title - Заголовок конфигурации.
  */
-const plumberNotifyHandler = (title: string): { errorHandler: any } => {
-    return {
-        errorHandler: notify.onError({
-            title: title,
-            message: 'Ошибка: <%= error.message %>',
-            sound: false,
-        }),
-    };
-}
+const plumberNotifyHandler: (title: string) => { errorHandler: notify.onError } =
+    (title: string): { errorHandler: notify.onError } => {
+        return {
+            errorHandler: notify.onError({
+                title: title,
+                message: 'Ошибка: <%= error.message %>',
+                sound: false,
+            }),
+        };
+    }
 
 /**
  * Пустая функция обратного вызова.
@@ -33,7 +34,7 @@ const cb: TransformCallback = (_err?: any, _data?: any): void => {
 }
 
 /**
- * Олагины используемые в задачах gulp данной сторки.
+ * Плагины, используемые в задачах gulp, данной сборки.
  */
 export const plugins: any = {
     replace: replace,

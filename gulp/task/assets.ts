@@ -1,11 +1,12 @@
 import * as gulp from "gulp";
+
 import { app } from "../app";
 
 
 /**
  * Копирование ресурсов как есть.
  */
-export const assets: gulp.TaskFunction = () => {
+export const assets: gulp.TaskFunction = (): NodeJS.ReadWriteStream => {
     return app.gulp.src(app.path.src.assets)
         .pipe(app.gulp.dest(app.path.build.assets));
 }

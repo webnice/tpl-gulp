@@ -18,13 +18,15 @@ const fontTypesExt: string[] = ['woff2', 'woff'];
  * Функция проверяет путь и если результирующий файл уже есть, возвращает "ложь".
  * @param file - путь и имя файла.
  */
-const ifFn = (file: any) => {
-    const lPath = file.path.replace(app.path.dirSource, '').replace(/^\//, '');
+const ifFn: (file: any) => boolean = (file: any): boolean => {
+    const lPath: string = file.path.replace(app.path.dirSource, '').replace(/^\//, '');
     let ret: boolean = false;
     let dFile: string = path.join(app.path.dirBuild, lPath).split('.')[0];
-    fontTypesExt.forEach((t) => {
+
+    fontTypesExt.forEach((t: string): void => {
         if (!fs.existsSync(`${dFile}.${t}`)) ret = true;
     });
+
     return ret;
 };
 
@@ -33,28 +35,31 @@ const ifFn = (file: any) => {
  * @param fFn - Функция обработки считанных файлов.
  * @param dir - Начальная директория.
  */
-const readDirFn = (fFn: (file: any) => boolean, dir: string) => {
-    let ret: any[] = [];
-    fs.readdirSync(dir).forEach((fileName: string): void => {
-        const file: string = path.join(dir, fileName);
-        const fsFile: fs.Stats = fs.lstatSync(file);
-        if (fsFile.isDirectory()) {
-            readDirFn(fFn, file).forEach((value) => {
-                ret.push(value);
-            });
-            return
-        }
-        ret.push(fFn(file));
-    });
-    return ret;
-};
+const readDirFn: (fFn: (file: fs.PathLike) => boolean, dir: fs.PathLike) => boolean[] =
+    (fFn: (file: fs.PathLike) => boolean, dir: fs.PathLike): boolean[] => {
+        let ret: boolean[] = [];
+
+        fs.readdirSync(dir).forEach((fileName: string): void => {
+            const file: string = path.join(dir.toString(), fileName);
+            const fsFile: fs.Stats = fs.lstatSync(file);
+            if (fsFile.isDirectory()) {
+                readDirFn(fFn, file).forEach((value: boolean): void => {
+                    ret.push(value);
+                });
+                return
+            }
+            ret.push(fFn(file));
+        });
+
+        return ret;
+    };
 
 /**
  * Попытка получения атрибутов шрифта из имени файла шрифта.
  * @param fontPath - Путь к файлу шрифта.
  * @param name     - Название файла шрифта.
  */
-const fontAttributesByFilename = (fontPath: string, name: string): any => {
+const fontAttributesByFilename: (fontPath: string, name: string) => any = (fontPath: string, name: string): any => {
     const fontFileName: string = name.split('.')[0];
     const fontPathFileName: string = fontPath.split('.')[0];
     const fontName: string = fontFileName.split('-')[0] ? fontFileName.split('-')[0] : fontFileName[0];
@@ -96,7 +101,7 @@ const fontAttributesByFilename = (fontPath: string, name: string): any => {
 /**
  * Вспомогательная функция потока gulp не делающая ничего.
  */
-const nopFn = (): NodeJS.ReadWriteStream => {
+const nopFn: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     let ret: vinyl.StreamFile[] = [];
     return through2.obj((file: vinyl.StreamFile, _enc: string, cb: TransformCallback): vinyl.StreamFile[] => {
         ret.push(file);
@@ -108,13 +113,13 @@ const nopFn = (): NodeJS.ReadWriteStream => {
 /**
  * Конвертация шрифтов из формата OTF в формат TTF.
  */
-export const otfToTtf = () => {
+export const otfToTtf: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     return app.gulp.src(app.path.src.fontsOtf, {})
         .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в шрифтах OTF')))
         // @ts-ignore
         .pipe(fonter({formats: ['ttf']})) // Конвертирование OTF в TTF.
         // @ts-ignore
-        .pipe(rename((path): void => {
+        .pipe(rename((path: rename.ParsedPath): void => {
             // Какой-то ужасный баг с путями в fonter,
             // как исправить не понятно, поэтому вставляем костыль.
             path.basename = path.basename.replace("\\", '/');
@@ -125,7 +130,7 @@ export const otfToTtf = () => {
 /**
  * Конвертация шрифтов из формата TTF в формат WOFF.
  */
-export const ttfToWoff = () => {
+export const ttfToWoff: () => any = (): any => {
     return app.gulp.src(app.path.src.fontsTtf, {})
         .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в шрифтах TTF')))
         // @ts-ignore
@@ -144,13 +149,14 @@ export const ttfToWoff = () => {
  * @param _done - Функция обратного вызова, должна вызываться при завершении задачи,
  * при использовании не потоковых задач.
  */
-export const ttfToWoff2 = (_done: TransformCallback) => {
-    return app.gulp.src(app.path.src.fontsTtf, {})
-        .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в шрифтах TTF')))
-        // @ts-ignore
-        .pipe(app.plugins.if(ifFn, ttf2woff2(), nopFn()))
-        .pipe(app.gulp.dest(app.path.build.fonts)); // Выгрузка в директорию результата.
-}
+export const ttfToWoff2: (_done: TransformCallback) => NodeJS.ReadWriteStream =
+    (_done: TransformCallback): NodeJS.ReadWriteStream => {
+        return app.gulp.src(app.path.src.fontsTtf, {})
+            .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в шрифтах TTF')))
+            // @ts-ignore
+            .pipe(app.plugins.if(ifFn, ttf2woff2(), nopFn()))
+            .pipe(app.gulp.dest(app.path.build.fonts)); // Выгрузка в директорию результата.
+    }
 
 /**
  * Создание файла fonts.scss, для подключения шрифтов в файлы стилей.
@@ -158,7 +164,7 @@ export const ttfToWoff2 = (_done: TransformCallback) => {
  * файла, так как автоматическое его создание может содержать ошибки.
  * @param done
  */
-export const fontToCss = (done: TransformCallback): void => {
+export const fontToCss: (done: TransformCallback) => void = (done: TransformCallback): void => {
     const fontsScss: string = `${app.path.dirSource}/scss/fonts.scss`; // Имя файла SCSS.
     let fonts: any[] = [];
 
@@ -169,7 +175,7 @@ export const fontToCss = (done: TransformCallback): void => {
         return;
     }
     // Создание нового файла.
-    const fontsAll: any[] = readDirFn((file) => {
+    const fontsAll: any[] = readDirFn((file: any): any => {
         const basename: string = path.basename(file);
         const dirname: string = path.dirname(file);
         const prefix: string = dirname.replace(app.path.build.fonts.replace(/\/+$/, ''), '').replace(/^\/+/, '');

@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as webp from "gulp-webp";
 
 import { app } from "../app";
@@ -9,12 +10,12 @@ import { app } from "../app";
  * - Копирование изображений из исходной директории в результирующую директорию.
  * - В режиме продакшн, создание для всех растровых изображений, оптимизированной копии изображения в формате webp.
  */
-export const img = () => {
+export const img: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     return app.gulp.src(app.path.src.img)
         .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в картинках')))
         .pipe(app.plugins.newer(app.path.build.img))
 
-        
+
         // Выполняется в режиме продакшн.
         // .pipe(app.plugins.if( // Выполняется только в продакшн режиме.
         //     app.isProd,

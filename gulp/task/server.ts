@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as proxy from "proxy-middleware";
 import { Options } from "browser-sync";
 import { TransformCallback } from "through2";
@@ -9,7 +10,7 @@ import { ProxyOptions } from "../../@types";
 /**
  * Номер порта на котором запускается локальный веб сервер.
  */
-const defaultPort: number = 9080;
+const defaultPort: number = 8190;
 /**
  * Хост, доменное имя или IP адрес, на котором запускается локальный веб сервер.
  */
@@ -20,7 +21,7 @@ const defaultHost: string = 'backend';
  * Все запросы к /api* проксируются на back-end сервер по адресу http://backend:80/api*.
  * Имя хоста или IP можно прописать в hosts, либо заменить в конфиге на ip адрес или доменное имя.
  */
-const proxyOptApi = (): ProxyOptions => {
+const proxyOptApi: () => ProxyOptions = (): ProxyOptions => {
     let ret: ProxyOptions = {};
 
     ret.protocol = "http:";
@@ -37,7 +38,7 @@ const proxyOptApi = (): ProxyOptions => {
  * Все запросы к /favicon* проксируются на back-end сервер по адресу http://backend:80/favicon*.
  * Имя хоста или IP можно прописать в hosts, либо заменить в конфиге на ip адрес или доменное имя.
  */
-const proxyOptFavicon = (): ProxyOptions => {
+const proxyOptFavicon: () => ProxyOptions = (): ProxyOptions => {
     let ret: ProxyOptions = {};
 
     ret.protocol = "http:";
@@ -73,7 +74,7 @@ const serverOpt: Options = {
  * @param done - Функция обратного вызова, должна вызываться при завершении задачи,
  * при использовании не потоковых задач.
  */
-export const server = (done: TransformCallback): void => {
+export const server: (done: TransformCallback) => void = (done: TransformCallback): void => {
     app.plugins.browsersync.init(serverOpt)
     done();
 }

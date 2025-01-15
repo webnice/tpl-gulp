@@ -15,13 +15,14 @@ const tsProject: Project = ts.createProject('tsconfig.json', {});
 /**
  * Создание из typescript кода javascript код.
  */
-export const typescript = (_done: TransformCallback) => {
-    return app.gulp.src(`${app.path.tmp.js}/**/*`, {allowEmpty: true}) // Выбор временной папки сборки.
-        .pipe(clean()) // Очистка временной папки сборки js.
-        .pipe(app.gulp.src(app.path.src.ts, {})) // Выбор папки с исходными скриптами на typescript.
-        .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в Typescript')))
-        .pipe(sourcemaps.init())
-        .pipe(tsProject())
-        .pipe(sourcemaps.write('.', {includeContent: true}))
-        .pipe(app.gulp.dest(app.path.tmp.js));
-}
+export const typescript: (_done: TransformCallback) => NodeJS.ReadWriteStream =
+    (_done: TransformCallback): NodeJS.ReadWriteStream => {
+        return app.gulp.src(`${app.path.tmp.js}/**/*`, {allowEmpty: true}) // Выбор временной папки сборки.
+            .pipe(clean()) // Очистка временной папки сборки js.
+            .pipe(app.gulp.src(app.path.src.ts, {})) // Выбор папки с исходными скриптами на typescript.
+            .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в Typescript')))
+            .pipe(sourcemaps.init())
+            .pipe(tsProject())
+            .pipe(sourcemaps.write('.', {includeContent: true}))
+            .pipe(app.gulp.dest(app.path.tmp.js));
+    }

@@ -1,8 +1,10 @@
 import * as dartSass from "sass"
 import * as gulpSass from "gulp-sass";
 import * as rename from "gulp-rename";
+// @ts-ignore
 import * as webpcss from "gulp-webpcss";
 import * as cleanCss from "gulp-clean-css";
+// @ts-ignore
 import * as autoprefixer from "gulp-autoprefixer";
 import * as postcss from "gulp-postcss";
 
@@ -34,12 +36,12 @@ const cleanCssOpt = {};
 /**
  * Обработка SCSS стилей и формирование CSS стилей с учётом современных обработок.
  */
-export const scss = () => {
+export const scss: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     return app.gulp.src(app.path.src.scss, {sourcemaps: app.isDev})
         .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в SCSS')))
         .pipe(sassProcessor(sassProcessorOpt))
 
-        
+
         // Выполняется в режиме продакшн.
         // .pipe(app.plugins.if( // Выполняется только в продакшн режиме.
         //     app.isProd,

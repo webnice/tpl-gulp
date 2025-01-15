@@ -18,7 +18,7 @@ const svgSpriteOpt: any = {
 /**
  * Создание SVG спрайта из группы SVG изображений.
  */
-export const spriteSvg = () => {
+export const spriteSvg: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     return app.gulp.src(app.path.src.svgIcon)
         .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка SVG спрайта')))
         // @ts-ignore

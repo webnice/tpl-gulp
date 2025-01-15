@@ -1,7 +1,10 @@
 import * as htmlmin from "gulp-htmlmin";
 import * as HTMLMinifier from 'html-minifier';
+// @ts-ignore
 import * as fileinclude from "gulp-file-include";
+// @ts-ignore
 import * as webpHtmlNosvg from "gulp-webp-html-nosvg";
+// @ts-ignore
 import * as versionNumber from "gulp-version-number";
 // @ts-ignore
 import * as prettyHtml from "gulp-pretty-html";
@@ -23,22 +26,22 @@ const htmlminOpt: HTMLMinifier.Options = {
  * Настройки форматирования HTML используемого в режиме разработки, так как красивый HTML удобно и приятно читать.
  */
 const prettyHtmlOpt: any = {
-    indent_size: 2, // Размер отступа. (По умолчанию: 4).
-    indent_char: " ", // Символ отступа. (По умолчанию пробел).
-    indent_with_tabs: false, // Отступ с использованием табуляции, переопределяет indent_size и indent_char.
-    eol: "\\n", // Символ или символы переноса строки.
-    end_with_newline: true, // Заканчивать вывод новой строкой.
-    preserve_newlines: true, // Сохранить существующий разрыв строк.
-    max_preserve_newlines: 2, // Максимальное количество сохраняемых переносов строк. (По умолчанию: 10).
-    indent_inner_html: false, // Отступы в разделах <head> и <body>. (По умолчанию: ложь.)
-    brace_style: "collapse", // [collapse-preserve-inline|collapse|expand|end-expand|none]. (По умолчанию: "collapse").
-    indent_scripts: "normal", // [keep|separate|normal] (По умолчанию: "normal").
-    wrap_line_length: 250, // Максимальное количество символов в строке. 0-отключено. (По умолчанию: 250).
-    wrap_attributes: "auto", // Перенос атрибутов на новые строки. [auto|force|force-aligned|force-expand-multiline] (По умолчанию: "auto").
+    indent_size: 2, //                  Размер отступа. (По умолчанию: 4).
+    indent_char: " ", //                Символ отступа. (По умолчанию пробел).
+    indent_with_tabs: false, //         Отступ с использованием табуляции, переопределяет indent_size и indent_char.
+    eol: "\\n", //                      Символ или символы переноса строки.
+    end_with_newline: true, //          Заканчивать вывод новой строкой.
+    preserve_newlines: true, //         Сохранить существующий разрыв строк.
+    max_preserve_newlines: 2, //        Максимальное количество сохраняемых переносов строк. (По умолчанию: 10).
+    indent_inner_html: false, //        Отступы в разделах <head> и <body>. (По умолчанию: ложь.)
+    brace_style: "collapse", //         [collapse-preserve-inline|collapse|expand|end-expand|none]. (По умолчанию: "collapse").
+    indent_scripts: "normal", //        [keep|separate|normal] (По умолчанию: "normal").
+    wrap_line_length: 250, //           Максимальное количество символов в строке. 0-отключено. (По умолчанию: 250).
+    wrap_attributes: "auto", //         Перенос атрибутов на новые строки. [auto|force|force-aligned|force-expand-multiline] (По умолчанию: "auto").
     wrap_attributes_indent_size: "", // Indent wrapped attributes to after N characters [indent-size] (ignored if wrap-attributes is "force-aligned")
-    unformatted: ["inline"], // Список тегов не подвергающихся переформатированию. (По умолчанию: ["inline"]).
-    content_unformatted: ["pre"], // Список тегов контент которые не переформатируется. (По умолчанию: ["pre"]).
-    extra_liners: ["body"], // Список тегов, перед которыми должна быть пустая строка. (По умолчанию: ["head", "body", "/html"].
+    unformatted: ["inline"], //         Список тегов не подвергающихся переформатированию. (По умолчанию: ["inline"]).
+    content_unformatted: ["pre"], //    Список тегов контент которые не переформатируется. (По умолчанию: ["pre"]).
+    extra_liners: ["body"], //          Список тегов, перед которыми должна быть пустая строка. (По умолчанию: ["head", "body", "/html"].
 };
 
 /**
@@ -67,15 +70,18 @@ const versionNumberSettings: any = {
  * - В режиме разработки, результирующий HTML форматируется для удобства чтения.
  * - В продакшн режиме, результирующий HTML очищается и сжимается в одну строку.
  */
-export const html = () => {
-
+export const html: () => NodeJS.ReadWriteStream = (): NodeJS.ReadWriteStream => {
     return app.gulp.src(app.path.src.html)
         .pipe(app.plugins.plumber(app.plugins.plumberNotifyHandler('Ошибка в HTML')))
         // @ts-ignore
         .pipe(fileinclude())
-        .pipe(app.plugins.replace(/@img\//g, '/img/'))
 
-        
+        // Замена констант на значения.
+        .pipe(app.plugins.replace(/@img\//g, '/img/'))
+        .pipe(app.plugins.replace(/@css\//g, '/css/'))
+        .pipe(app.plugins.replace(/@js\//g, '/js/'))
+        .pipe(app.plugins.replace(/@fonts\//g, '/fonts/'))
+
         // Выполняется в режиме продакшн.
         // .pipe(app.plugins.if( // Выполняется только в продакшн режиме.
         //     app.isProd,
@@ -84,7 +90,6 @@ export const html = () => {
 
         // Выполняется в любом режиме.
         .pipe(webpHtmlNosvg()) // Вставляет в HTML для всех изображений загрузку webp версий.
-
 
         .pipe(app.plugins.if( // Выполняется только в продакшн режиме.
             app.isProd,
